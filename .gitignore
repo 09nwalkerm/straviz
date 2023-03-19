@@ -1,3 +1,4 @@
-#tokens to ignore
+#tokens and pws to ignore
 tokens.json
 tokens.txt
+mysql_pw

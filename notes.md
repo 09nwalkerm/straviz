@@ -28,3 +28,8 @@
 - May need to figure out the diff between mysql and mysqld_safe
 
 - Base installation directory for MySQL is /usr/
+
+- `mysql -u root -p` to connect to the mysql server.
+
+- For help: https://dev.mysql.com/doc/mysql-getting-started/en/
+
