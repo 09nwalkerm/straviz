@@ -33,3 +33,8 @@
 
 - For help: https://dev.mysql.com/doc/mysql-getting-started/en/
 
+```sh
+    #mycursor = mydb.cursor()
+    #cursor.execute("SELECT * FROM table ORDER BY id DESC LIMIT 1")
+    #result = cursor.fetchone()
+```
