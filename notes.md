@@ -51,3 +51,12 @@ print(f"your number is {text :d}")
 - https://www.cyberciti.biz/tips/linux-unix-get-yesterdays-tomorrows-date.html
 
 - `echo 1679319002 > epoch`
+
+- `SHOW GLOBAL VARIABLES LIKE 'PORT';`
+
+- Mysql: port 3306
+- grafana: port 3000
+
+- `select * from mysql.user;` to see users and permissions for database.
+
+- `SELECT date,distance from sport.activities`
