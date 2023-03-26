@@ -38,3 +38,16 @@
     #cursor.execute("SELECT * FROM table ORDER BY id DESC LIMIT 1")
     #result = cursor.fetchone()
 ```
+
+```sh
+import sys
+
+print(f"please give a number")
+text = int(input())
+
+print(f"your number is {text :d}")
+```
+
+- https://www.cyberciti.biz/tips/linux-unix-get-yesterdays-tomorrows-date.html
+
+- `echo 1679319002 > epoch`
