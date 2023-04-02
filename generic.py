@@ -38,10 +38,15 @@ def createvals(actval):
     actval.addactivities(vals)
 
 if __name__ == "__main__":
-    actval = GenActivityVals()
+
+    actval = GenActivityVals("activities")
     setup_db(actval)
     get_last_sync(actval)
 
     createvals(actval)
+
+    commit_db(actval)
+
+    actval.table = "copy"
 
     commit_db(actval)

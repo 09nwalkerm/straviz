@@ -7,6 +7,8 @@ echo "Syncing with Strava..."
 python3 sync.py
 # Ask for other sessions
 python3 generic.py
+# Adjust copy table to fill gaps
+python3 adjust_copy.py
 # Stamp
 echo "Saving epoch timestamp"
 epoch=`date +%s`

@@ -3,8 +3,9 @@ import json
 import requests
 
 class ActivityVals:
-    def __init__(self):
+    def __init__(self,table):
         self.val = []
+        self.table = table
 
     def addsync(self,epoch):
         self.last_sync = int(epoch)
@@ -27,7 +28,7 @@ def setup_db(actval):
 
 def commit_db(actval) -> None:
     mycursor = actval.mydb.cursor()
-    sql= "INSERT INTO activities (type, date, moving_time, distance) VALUES (%s, %s, %s, %s)"
+    sql= "INSERT INTO " + actval.table + " (type, date, moving_time, distance) VALUES (%s, %s, %s, %s)"
 
     if (actval.length == 0):
         print("You're already up to date :)")

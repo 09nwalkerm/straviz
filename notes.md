@@ -60,3 +60,20 @@ print(f"your number is {text :d}")
 - `select * from mysql.user;` to see users and permissions for database.
 
 - `SELECT date,distance from sport.activities`
+
+- `sudo grafana server`
+
+- The null value problem: https://learn.microsoft.com/en-us/azure/azure-sql-edge/imputing-missing-values
+
+- `GRANT CREATE ON sport.activities TO 'api_user'@'localhost';`
+
+- `mysql> select * from activities where date > '2023-03-20';`
+
+```sh
+date = datetime.datetime(2003,8,1,12,4,5)
+for i in range(5): 
+    date += datetime.timedelta(days=1)
+    print(date) 
+```
+
+- `mysql> select * from copy where date > '2023-03-20' AND type="Run";`

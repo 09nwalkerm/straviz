@@ -35,12 +35,17 @@ def fetch_sport(actval) -> None:
     print(f"Syncing {actval.length :d} strava activities...")
 
 if __name__ == "__main__":
-    actval = StravaActivityVals()
+
+    actval = StravaActivityVals("activities")
     actval.addtoken()
     get_last_sync(actval)
 
     setup_db(actval)
 
     fetch_sport(actval)
+
+    commit_db(actval)
+
+    actval.table = "copy"
 
     commit_db(actval)
