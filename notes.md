@@ -77,3 +77,33 @@ for i in range(5):
 ```
 
 - `mysql> select * from copy where date > '2023-03-20' AND type="Run";`
+
+- `select date,SUM(moving_time) over (order by date) as total from copy;`
+
+- Rolling average: https://chartio.com/learn/postgresql/how-to-create-a-rolling-period-running-total/
+
+- `select date,distance,DATE_ADD(date, INTERVAL -3 DAY) as date_back, SUM(distance) OVER (BETWEEN date_back AND date) from copy where type="Run";`
+
+- https://stackoverflow.com/questions/19213633/create-a-rolling-sum-over-a-period-of-time-in-mysql
+
+- 
+
+MySQL 8 has window functions that are meant for this exact case:
+
+SELECT
+    SUM(time_spent) OVER(
+         ORDER BY date RANGE BETWEEN INTERVAL 7 DAY PRECEDING 
+         AND CURRENT ROW) AS total,
+    date
+FROM rolling_total
+
+ORDER BY date determines the dimension you are using for the rolling window.
+
+RANGE BETWEEN A AND B defines the filter criteria of the window.
+
+INTERVAL 7 DAY PRECEDING means all 7 days prior to the current row.
+
+CURRENT ROW uses the value of the current row.
+
+- `SELECT SUM(distance) OVER (ORDER BY date RANGE BETWEEN INTERVAL 7 DAY PRECEDING AND CURRENT ROW) AS rolling_7_day, date FROM copy WHERE type="Run";`
+
