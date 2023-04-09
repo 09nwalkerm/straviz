@@ -13,4 +13,6 @@ python3 adjust_copy.py
 echo "Saving epoch timestamp"
 epoch=`date +%s`
 echo $epoch > epoch
-echo "Database updated. Please go to grafana server to visualize data."
+echo "Database updated. Starting grafana server..."
+sudo grafana server
+echo "Please go to grafana server to visualize data: localhost:3000"

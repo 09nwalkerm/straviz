@@ -107,3 +107,14 @@ CURRENT ROW uses the value of the current row.
 
 - `SELECT SUM(distance) OVER (ORDER BY date RANGE BETWEEN INTERVAL 7 DAY PRECEDING AND CURRENT ROW) AS rolling_7_day, date FROM copy WHERE type="Run";`
 
+- `select yearweek(date) as time, sum(moving_time) as total from copy group by time;`
+
+- `with data as (select date,distance,moving_time from copy where type="Run") select convert(date_format(date,'%x %v'),char) as times, sum(distance) as total from data group by times;`
+
+
+
+
+
+
+
+
