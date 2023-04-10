@@ -47,7 +47,7 @@ def sort_dates(actval,sport):
 def fill_spaces(actval,sport):
     vals=[]
     for i in range(0,len(actval.empty_dates)):
-        val = (sport,actval.empty_dates[i],0,0)
+        val = (sport,actval.empty_dates[i],0,0,0,0,0)
         vals.append(val)
     actval.addactivities(vals)
     commit_db(actval)

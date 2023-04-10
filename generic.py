@@ -31,7 +31,7 @@ def createvals(actval):
             continue
         else:
             data = get_json(answer)
-            val = (data["type"],act_date,data["moving_time"],data["distance"])
+            val = (data["type"],act_date,data["moving_time"],data["distance"],data["avgHR"],data["maxHR"],data["stress"])
             vals.append(val)
             epoch_time += 86400
 

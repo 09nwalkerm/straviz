@@ -14,5 +14,5 @@ echo "Saving epoch timestamp"
 epoch=`date +%s`
 echo $epoch > epoch
 echo "Database updated. Starting grafana server..."
-sudo grafana server
+nohup sudo grafana server &>/dev/null &
 echo "Please go to grafana server to visualize data: localhost:3000"

@@ -18,7 +18,7 @@ def fetch_sport(actval) -> None:
 
 def get_first_sync(actval) -> None:
     mycursor = actval.mydb.cursor()
-    sql = "SELECT date FROM activities LIMIT 1"
+    sql = "SELECT date FROM activities ORDER BY date LIMIT 1"
     mycursor.execute(sql)
     myresult = mycursor.fetchall()
     sync = myresult[0][0].strftime("%s")

@@ -124,3 +124,9 @@ CURRENT ROW uses the value of the current row.
 ```
 
 - `echo 1676319002 > epoch`
+
+```sh
+with data as (select date,distance,moving_time from copy where type="Run" order by date) 
+select DATE_FORMAT(ADDDATE(date, INTERVAL 2-WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, 
+sum(distance) as total from data where date > date_format(ADDDATE(current_date, INTERVAL -300 DAY),"%Y-%m-%d") group by weeks order by weeks;
+```
