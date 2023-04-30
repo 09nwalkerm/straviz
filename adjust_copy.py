@@ -13,7 +13,7 @@ class AdjustmentVals(ActivityVals):
     def add_empty_dates(self,dates):
         self.empty_dates = dates
 
-    def addactivities(self,vals):
+    def addactivities2(self,vals):
         self.val = vals
         self.length = len(vals)
 
@@ -49,7 +49,7 @@ def fill_spaces(actval,sport):
     for i in range(0,len(actval.empty_dates)):
         val = (sport,actval.empty_dates[i],0,0,0,0,0)
         vals.append(val)
-    actval.addactivities(vals)
+    actval.addactivities2(vals)
     commit_db(actval)
 
 if __name__ == "__main__":

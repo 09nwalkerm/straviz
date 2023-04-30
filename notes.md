@@ -130,3 +130,21 @@ with data as (select date,distance,moving_time from copy where type="Run" order 
 select DATE_FORMAT(ADDDATE(date, INTERVAL 2-WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, 
 sum(distance) as total from data where date > date_format(ADDDATE(current_date, INTERVAL -300 DAY),"%Y-%m-%d") group by weeks order by weeks;
 ```
+
+## Ideas:
+
+- autocomplete for activities
+- training stress score for each week, fitness, form and fatigure graphs.
+
+- https://help.trainingpeaks.com/hc/en-us/articles/204071894-Fatigue-ATL-
+
+- https://dev.mysql.com/doc/refman/8.0/en/window-functions-frames.html
+
+- with data as (select date, sum(stress) as st, ADDDATE(date, INTERVAL 1 DAY) as tomorrow from copy group by date order by date) select tomorrow, st as ATLY from data where date < current_date;
+    - then do inner join I think.
+
+- with data as (select date, sum(stress) as st, ADDDATE(date, INTERVAL 1 DAY) as tomorrow from copy group by date order by date) select date, st, LAG(st,1) over (order by date) from data;
+
+- ATLtoday = ATLyesterday + (TSStoday - ATLyesterday)(1/ATL time constant)
+
+- `mysql> create table fitness (id INT, date DATE, fitness FLOAT, fatigue FLOAT, form FLOAT);`

@@ -3,3 +3,7 @@ tokens.json
 tokens.txt
 mysql_pw
 epoch
+
+__pycache__
+utils/__pycache__
+utils/__pycache__*
