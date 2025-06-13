@@ -7,5 +7,6 @@ src/epoch
 __pycache__
 src/utils/__pycache__
 src/utils/__pycache__*
-src/venv/
+src/straviz_env/
 src/lient_data.txt
+straviz_env/
