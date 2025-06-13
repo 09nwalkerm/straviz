@@ -1,9 +1,11 @@
 #tokens and pws to ignore
-tokens.json
-tokens.txt
-mysql_pw
-epoch
+src/tokens.json
+src/tokens.txt
+src/mysql_pw
+src/epoch
 
 __pycache__
-utils/__pycache__
-utils/__pycache__*
+src/utils/__pycache__
+src/utils/__pycache__*
+src/venv/
+src/lient_data.txt

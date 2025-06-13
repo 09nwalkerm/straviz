@@ -148,3 +148,64 @@ sum(distance) as total from data where date > date_format(ADDDATE(current_date, 
 - ATLtoday = ATLyesterday + (TSStoday - ATLyesterday)(1/ATL time constant)
 
 - `mysql> create table fitness (id INT, date DATE, fitness FLOAT, fatigue FLOAT, form FLOAT);`
+
+## README.md
+
+Straviz - Not a very functional, efficient or robust way of displaying strava data. Simply a project to learn Grafana, SQL, and improve my OOP in Python. The set up below should get you started but hopefully it will be automated in a script one day.
+
+### Installation guide
+
+- clone repo
+- `cd straviz/src`
+
+### mysql
+- install mysql with apt - `sudo apt install mysql server`
+- open mysql with `sudo mysql`
+- make sports database: `CREATE DATABASE sports;`
+
+- set up an `api_user` user: `CREATE USER 'api_user'@'localhost' IDENTIFIED BY 'your_secure_password';` obviously replacing `your_secure_password`
+- save `your_secure_password` in a file `mysql_pw`
+- then give permission to the api_user: `GRANT ALL PRIVILEGES ON sports.* TO 'api_user'@'localhost'; FLUSH PRIVILEGES; EXIT;`
+
+- select sports db: `USE sports;`
+- create activities table: ``
+- create copy of activities table: ``
+- create fitness table: `create table fitness (id INT, date DATE, fitness FLOAT, fatigue FLOAT, form FLOAT);`
+
+
+### strava API
+- follow this guide for setting up strava developer API: https://developers.strava.com/docs/getting-started/
+- a note on scope: - if you have `scope:read` you can access public activities only but can access private ones too if you have `scope:read_all`)
+- save client id and client secret in file client_data.txt
+- save access token, refresh token and expiry date in token.txt:
+```sh
+echo $YOUR_ACCESS_TOKEN >> tokens.txt
+echo $YOUR_REFRESH_TOKEN >> tokens.txt
+echo $YOUR_EXPIRE_TIME >> tokens.txt
+```
+    - expire time can be found on the web and then using command line (e.g.): `date -d 2025-06-13T21:36:23Z +%s >> tokens.txt`
+
+### setting up a python evironment
+- make python environment:
+```py
+python3 -m venv straviz_env
+source straviz_env/bin/activate
+pip install -r requirements.txt
+```
+
+### Last bits
+- save epoch in a file `epoch` for 2 weeks ago, using: `date -d "2 weeks ago" +%s > epoch`
+- run `python3 back_date.py` a few times to get some data into the table (this assumes you have an active strava account with a few sporting activities to draw from) .
+- run `python3 adjust_copy.py`
+
+
+### grafana
+- install grafana with apt - follow steps on website...
+- start grafana server if necessary or if coming back: `sudo systemctl start grafana-server`
+- login to grafana admin and change admin password, save password
+- Setup mysql backend: `Menu -> Connections -> Data sources -> Add new data source`. Search MySQL and fill in details about api_user. Host url should be: `localhost:3306` with database: `sports`.
+- load dashboard by `Menu -> Dashboards -> New -> Import` and when prompted upload the Activities.json file.
+- et voila!
+
+- now you can come to this repo once a day/week/month, run `sync.sh` and fill in the gym sessions you did each day or add to the sports type folder to add even more activities (e.g. climbing sessions). Then watch your progress on grafana.
+
