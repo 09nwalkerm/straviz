@@ -1,28 +1,31 @@
 import pymysql as mysql
 import json
 import requests
+from dotenv import load_dotenv, set_key
+import os
 
 class ActivityVals:
     def __init__(self,table):
         self.val = []
         self.table = table
-
-    def addsync(self,epoch):
-        self.last_sync = int(epoch)
+        load_dotenv(dotenv_path="config/.env")
+        self.last_sync = int(os.getenv("LAST_SYNC"))
+        self.mysql_user = os.getenv("MYSQL_USER")
+        self.mysql_pw = os.getenv("MYSQL_PW")
+        self.mysql_host = os.getenv("MYSQL_HOST")
+        self.mysql_db = os.getenv("MYSQL_DATABASE")
+        self.access_token = os.getenv("ACCESS_TOKEN")
 
     def addmydb(self,mydb):
         self.mydb = mydb
 
 def setup_db(actval):
-    f = open("mysql_pw","r")
-    pw = f.readlines()[0].rstrip('\n')
-    f.close()
 
     mydb = mysql.connect(
-    host="localhost",
-    user="api_user",
-    password=pw,
-    database="sports"
+    host=actval.mysql_host,
+    user=actval.mysql_user,
+    password=actval.mysql_pw,
+    database=actval.mysql_db
     )
     actval.addmydb(mydb)
 
@@ -39,9 +42,3 @@ def commit_db(actval) -> None:
         mycursor.executemany(sql, actval.val)
         print(f"Adding {actval.length :d} activities to database")
     actval.mydb.commit()
-
-def get_last_sync(actval):
-    f = open("epoch","r")
-    epoch = f.readlines()[0].rstrip('\n')
-    f.close()
-    actval.addsync(epoch)

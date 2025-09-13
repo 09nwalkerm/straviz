@@ -1,15 +1,11 @@
 import pymysql as mysql
 import json
 import requests
-from utils.module import ActivityVals, get_last_sync, setup_db, commit_db
+from utils.module import ActivityVals, setup_db, commit_db
+from dotenv import load_dotenv, set_key
+import os
 
 class StravaActivityVals(ActivityVals):
-
-    def addtoken(self):
-        f = open("tokens.txt","r")
-        token = f.readlines()[1].rstrip('\n')
-        f.close()
-        self.access_token = token
 
     def addactivities(self,data):
         #self.data = data
@@ -45,8 +41,6 @@ def fetch_sport(actval) -> None:
 if __name__ == "__main__":
 
     actval = StravaActivityVals("activities")
-    actval.addtoken()
-    get_last_sync(actval)
 
     setup_db(actval)
 

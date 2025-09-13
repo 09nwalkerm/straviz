@@ -2,6 +2,8 @@
 
 Not a very functional, efficient or robust way of displaying strava data. Simply a project to learn Grafana, SQL, and improve my OOP in Python. The set up below should get you started but hopefully it will be automated in a script one day.
 
+Disclaimer: This mini-app is in no way affiliated with Strava.
+
 ### Installation guide
 
 - Clone this repo.
@@ -10,21 +12,23 @@ Not a very functional, efficient or robust way of displaying strava data. Simply
 ### mysql
 - Install mysql with apt - `sudo apt install mysql server`
 - Open mysql with `sudo mysql`
-- Make sports database: `CREATE DATABASE sports;`
+- Make sports database: `CREATE DATABASE sport;`
 
 - Set up an `api_user` user: `CREATE USER 'api_user'@'localhost' IDENTIFIED BY 'your_secure_password';` obviously replacing `your_secure_password`
 - Save `your_secure_password` in a file `mysql_pw`
-- Then give permission to the api_user: `GRANT ALL PRIVILEGES ON sports.* TO 'api_user'@'localhost'; FLUSH PRIVILEGES; EXIT;`
+- Then give permission to the api_user: `GRANT ALL PRIVILEGES ON sport.* TO 'api_user'@'localhost'; FLUSH PRIVILEGES; EXIT;`
 
-- Select sports db: `USE sports;`
+- Select sport db: `USE sport;`
 - Create activities table: ``
 ```sh
 CREATE TABLE activities (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    type VARCHAR(50),
-    act_date DATE,
+    sid INT,                -- strava ID
+    type VARCHAR(50),       -- type of activity
+    act_date DATE,          -- date of activity
     moving_time INT,        -- in seconds
-    distance FLOAT,         -- in meters (or km, depending on your data)
+    distance FLOAT,         -- in metres
+    avg_speed FLOAT,        -- in metres/second
     avgHR INT,              -- average heart rate
     maxHR INT,              -- maximum heart rate
     stress INT              -- Training Stress Score (TSS)
@@ -34,18 +38,24 @@ CREATE TABLE activities (
 - Create fitness table: `create table fitness (id INT, date DATE, fitness FLOAT, fatigue FLOAT, form FLOAT);`
 
 
-### strava API
+### Strava API
 - Follow this guide for setting up strava developer API: https://developers.strava.com/docs/getting-started/
-    - A note on scope: - if you have `scope:read` you can access public activities only but can access private ones too if you have `scope:read_all`)
-- Save client id and client secret in file client_data.txt
-- Save access token, refresh token and expiry date in token.txt:
+    - Make sure that when you get to the stage of entering in the URL `http://www.strava.com/oauth/authorize?client_id=[REPLACE_WITH_YOUR_CLIENT_ID]&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=read` that you add `,activity:read_all` to the end otherwise you won't be able to read activities.
+    - A note on scope: - if you have `scope=read,activity:read` you can access public activities only but can access private ones too if you have `scope=read,activity:read_all`)
+- Save client id, client secret, access and refresh tokens, expiry time (as epoch), and MySQL user details in a `config/.env` file. An example template is given below and in the `src/config` folder.
 ```sh
-echo $YOUR_EXPIRE_TIME >> tokens.txt
-echo $YOUR_ACCESS_TOKEN >> tokens.txt
-echo $YOUR_REFRESH_TOKEN >> tokens.txt
+CLIENT_ID=
+CLIENT_SECRET=
+EXPIRES_AT=
+ACCESS_TOKEN=
+REFRESH_TOKEN=
+MYSQL_PW=
+MYSQL_USER="api_user"
+MQSQL_HOST="localhost"
+MYSQL_DATABASE="sport"
+LAST_SYNC=
 ```
-    - Expire time can be found on the web and then using command line (e.g.): `date -d 2025-06-13T21:36:23Z +%s >> tokens.txt`
-
+- Save the LAST_SYNC key to 2 weeks ago (or further back if you want), using: `date -d "2 weeks ago" +%s`
 ### setting up a python evironment
 - Make python environment:
 ```py
@@ -55,7 +65,6 @@ pip install -r requirements.txt
 ```
 
 ### GET some activities
-- Save epoch in a file `epoch` for 2 weeks ago, using: `date -d "2 weeks ago" +%s > epoch`
 - Run `sync.sh`. 
 - Run `python3 back_date.py` a few times to get some data into the table (this assumes you have an active strava account with a few months of sporting activities to draw from).
 - Run `python3 adjust_copy.py`

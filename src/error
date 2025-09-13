@@ -1,9 +1,0 @@
-Old token still valid
-Starting python evironment...
-Syncing with Strava...
-Activities table updated.
-Copy table adjusted for empty dates.
-Fitness, fatigue and form values calculated.
-Saving epoch timestamp
-Database updated.
-Please go to grafana server to visualize data: localhost:3000
