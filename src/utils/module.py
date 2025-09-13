@@ -31,7 +31,7 @@ def setup_db(actval):
 
 def commit_db(actval) -> None:
     mycursor = actval.mydb.cursor()
-    sql= "INSERT INTO " + actval.table + " (type, date, moving_time, distance, avgHR, maxHR, stress) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    sql= "INSERT INTO " + actval.table + " (sid, type, date, moving_time, distance, avg_speed, avgHR, maxHR, stress) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     if (actval.length == 0):
         print("You're already up to date :)")

@@ -1,4 +1,5 @@
 import json
+from dotenv import set_key
 
 f = open("tokens.json","r")
 data=json.load(f)
@@ -7,8 +8,6 @@ refresh_token=data["refresh_token"]
 access_token=data["access_token"]
 f.close()
 
-f = open("tokens.txt","w")
-f.write(str(expires_at)+"\n")
-f.write(access_token+"\n")
-f.write(refresh_token+"\n")
-f.close()
+set_key("config/.env","ACCESS_TOKEN",access_token)
+set_key("config/.env","REFRESH_TOKEN",refresh_token)
+set_key("config/.env","EXPIRES_AT",expires_at)
