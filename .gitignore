@@ -1,12 +1,16 @@
 #tokens and pws to ignore
 src/tokens.json
-src/tokens.txt
-src/mysql_pw
-src/epoch
+.env
+src/.env
+src/config/.env
 
+# python envs and cache
 __pycache__
 src/utils/__pycache__
 src/utils/__pycache__*
 src/straviz_env/
-src/client_data.txt
 straviz_env/
+
+# jupyter notebooks
+src/*.ipynb
+src/.ipynb_checkpoints

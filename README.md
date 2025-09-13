@@ -42,7 +42,7 @@ CREATE TABLE activities (
 - Follow this guide for setting up strava developer API: https://developers.strava.com/docs/getting-started/
     - Make sure that when you get to the stage of entering in the URL `http://www.strava.com/oauth/authorize?client_id=[REPLACE_WITH_YOUR_CLIENT_ID]&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=read` that you add `,activity:read_all` to the end otherwise you won't be able to read activities.
     - A note on scope: - if you have `scope=read,activity:read` you can access public activities only but can access private ones too if you have `scope=read,activity:read_all`)
-- Save client id, client secret, access and refresh tokens, expiry time (as epoch), and MySQL user details in a `config/.env` file. An example template is given below and in the `src/config` folder.
+- Save client id, client secret, access and refresh tokens, expiry time (as epoch), and MySQL user details in a `src/config/.env` file. An example template is given below and in the `src/config` folder.
 ```sh
 CLIENT_ID=
 CLIENT_SECRET=
