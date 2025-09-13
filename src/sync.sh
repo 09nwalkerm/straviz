@@ -16,9 +16,11 @@ echo "Copy table adjusted for empty dates."
 python3 fatigue.py
 echo "Fitness, fatigue and form values calculated."
 # Stamp
-echo "Saving epoch timestamp"
+echo "Saving last sync timestamp"
 epoch=`date +%s`
-echo $epoch > epoch
-echo "Database updated." #Starting grafana server..."
+dotenv -f "config/.env" set LAST_SYNC epoch
+#echo $epoch > epoch
+echo "Database updated." 
+#Starting grafana server..."
 # nohup sudo grafana server &>/dev/null &
 echo "Please go to grafana server to visualize data: localhost:3000"

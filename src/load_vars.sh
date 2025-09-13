@@ -25,5 +25,3 @@ if [ "$expires_at" -lt "$now" ]; then
 else
 	echo "Old token still valid"
 fi
-
-
