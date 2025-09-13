@@ -1,0 +1,4 @@
+{
+  "allowed": ["sid", "type", "date", "moving_time", "distance", "avg_speed", "avgHR", "maxHR", "stress", "elevation"],
+  "rename": { "id": "sid", "average_speed": "avg_speed", "average_heartrate": "avgHR", "max_heartrate": "maxHR", "suffer_score": "stress", "start_date": "date", "total_elevation_gain": "elevation"}
+}

@@ -1,10 +1,10 @@
 #! /bin/bash
 
-# Authenticate
-. load_vars.sh
 # Syncronize
 echo "Starting python evironment..."
 source straviz_env/bin/activate
+# Authenticate
+. load_vars.sh
 echo "Syncing with Strava..."
 python3 sync.py
 # Ask for other sessions

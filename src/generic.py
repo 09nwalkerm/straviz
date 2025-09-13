@@ -3,7 +3,7 @@ import datetime as dt
 import pymysql as mysql
 import json
 import requests
-from utils.module import ActivityVals, get_last_sync, setup_db, commit_db
+from utils.module import ActivityVals, setup_db, commit_db
 
 class GenActivityVals(ActivityVals):
     def addactivities(self,vals):
@@ -31,7 +31,7 @@ def createvals(actval):
             continue
         else:
             data = get_json(answer)
-            val = (data["type"],act_date,data["moving_time"],data["distance"],data["avgHR"],data["maxHR"],data["stress"])
+            val = (data["type"],act_date,data["moving_time"],data["stress"])
             vals.append(val)
             epoch_time += 86400
 
@@ -41,7 +41,6 @@ if __name__ == "__main__":
 
     actval = GenActivityVals("activities")
     setup_db(actval)
-    get_last_sync(actval)
 
     createvals(actval)
 
