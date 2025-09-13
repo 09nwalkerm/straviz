@@ -1,8 +1,8 @@
 import pymysql as mysql
 import json
 import requests
-from utils.module import ActivityVals, get_last_sync, setup_db, commit_db
-from sync import StravaActivityVals, fetch_sport
+from utils.module import ActivityVals, setup_db, commit_db
+from sync import StravaActivityVals
 from adjust_copy import get_dates, sort_dates, fill_spaces
 
 class BackActivityVals(StravaActivityVals):
@@ -13,15 +13,15 @@ class BackActivityVals(StravaActivityVals):
     def get_last(self):
         self.last_sync = int(self.first_sync)
 
-    def add_dates(self,dates):
-        self.dates = dates
+    #def add_dates(self,dates):
+    #    self.dates = dates
 
-    def add_empty_dates(self,dates):
-        self.empty_dates = dates
+    #def add_empty_dates(self,dates):
+    #    self.empty_dates = dates
 
-    def addactivities2(self,vals):
-        self.val = vals
-        self.length = len(vals)
+    #def addactivities2(self,vals):
+    #    self.val = vals
+    #    self.length = len(vals)
 
 def fetch_sport(actval) -> None:
     headers={"Authorization": "Bearer " + str(actval.access_token)}
@@ -42,22 +42,16 @@ def get_first_sync(actval) -> None:
 if __name__ == "__main__":
 
     actval = BackActivityVals("activities")
-    actval.addtoken()
-
     setup_db(actval)
-
     get_first_sync(actval)
-
     fetch_sport(actval)
-    
+    filter_duplicates(actval)
     commit_db(actval)
 
     actval.table = "copy"
-
+    filter_duplicates(actval)
     commit_db(actval)
-
     actval.get_last()
-
     for i in ["Run","Gym"]:
         get_dates(actval,i)
         sort_dates(actval,i)

@@ -31,8 +31,9 @@ def createvals(actval):
             continue
         else:
             data = get_json(answer)
-            val = (data["type"],act_date,data["moving_time"],data["stress"])
-            vals.append(val)
+            data["date"] = act_date
+            #val = (data["type"],act_date,data["moving_time"],data["stress"])
+            vals.append(data)
             epoch_time += 86400
 
     actval.addactivities(vals)
@@ -41,11 +42,7 @@ if __name__ == "__main__":
 
     actval = GenActivityVals("activities")
     setup_db(actval)
-
     createvals(actval)
-
     commit_db(actval)
-
     actval.table = "copy"
-
     commit_db(actval)

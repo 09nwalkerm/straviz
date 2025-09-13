@@ -11,7 +11,7 @@ class StravaActivityVals(ActivityVals):
         self.length = len(data[:])
         for i in range(0,self.length):
             data[i]["start_date"] = data[i]["start_date"].split('T')[0]
-            with open("activity_values.json") as f:
+            with open("config/activity_values.json") as f:
                 config = json.load(f)
             allowed = config["allowed"]
             rename = config.get("rename", {})
@@ -31,6 +31,9 @@ if __name__ == "__main__":
     actval = StravaActivityVals("activities")
     setup_db(actval)
     fetch_sport(actval)
+    filter_duplicates(actval)
     commit_db(actval)
+
     actval.table = "copy"
+    filter_duplicates(actval)
     commit_db(actval)

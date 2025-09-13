@@ -4,7 +4,7 @@ import requests
 import datetime as dt
 import numpy as np
 
-from utils.module import ActivityVals, get_last_sync, setup_db, commit_db
+from utils.module import ActivityVals, setup_db, commit_db
 
 class FatigueVals(ActivityVals):
 
@@ -65,16 +65,10 @@ def commit_fitness(actval):
         print(f"Adding {actval.length :d} fitness value days to database")
     actval.mydb.commit()
 
-
-#def update_fitness(actval):
-
-
 if __name__ == "__main__":
 
     actval = FatigueVals("copy")
     setup_db(actval)
-    
     create_fitness(actval)
-
     commit_fitness(actval)
 

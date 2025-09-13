@@ -25,9 +25,10 @@ CREATE TABLE activities (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sid INT,                -- strava ID
     type VARCHAR(50),       -- type of activity
-    act_date DATE,          -- date of activity
+    date DATE,              -- date of activity
     moving_time INT,        -- in seconds
     distance FLOAT,         -- in metres
+    elevation FLOAT,        -- in metres
     avg_speed FLOAT,        -- in metres/second
     avgHR INT,              -- average heart rate
     maxHR INT,              -- maximum heart rate

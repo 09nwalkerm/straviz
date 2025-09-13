@@ -5,6 +5,7 @@ from dotenv import load_dotenv, set_key
 import os
 
 class ActivityVals:
+
     def __init__(self,table):
         self.val = []
         self.table = table
@@ -20,7 +21,6 @@ class ActivityVals:
         self.mydb = mydb
 
 def setup_db(actval):
-
     mydb = mysql.connect(
     host=actval.mysql_host,
     user=actval.mysql_user,
@@ -29,10 +29,19 @@ def setup_db(actval):
     )
     actval.addmydb(mydb)
 
+def filter_duplicates(actval) -> None:
+    mycursor = actval.mydb.cursor()
+    sql = f"SELECT sid FROM {actval.table}"
+    mycursor.execute(sql)
+    saved_sids = mycursor.fetchall()
+    sids_set = {x[0] for x in saved_sids}
+    filtered_vals = [a for a in actval.val if a["sid"] not in sids_set]
+    actval.val = filtered_vals
+
 def commit_db(actval) -> None:
     mycursor = actval.mydb.cursor()
-    columns = ", ".join(values.keys())
-    placeholders = ", ".join(["%s"] * len(values))
+    columns = ", ".join(actval.val.keys())
+    placeholders = ", ".join(["%s"] * len(actval.val.values))
     sql = f"INSERT INTO {actval.table} ({columns}) VALUES ({placeholders})"
     #sql= "INSERT INTO " + actval.table + " (sid, type, date, moving_time, distance, avg_speed, avgHR, maxHR, stress) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
@@ -40,7 +49,7 @@ def commit_db(actval) -> None:
         print("You're already up to date :)")
     elif (actval.length == 1):
         print("Adding 1 activity to database")
-        mycursor.execute(sql, actval.val)
+        mycursor.execute(sql, tuple(actval.val.values()))
     else:
         mycursor.executemany(sql, actval.val)
         print(f"Adding {actval.length :d} activities to database")
