@@ -1,13 +1,9 @@
-import pymysql as mysql
-import json
-import requests
-import datetime as dt
 import numpy as np
 import pandas as pd
 from sqlalchemy import create_engine
 import mysql.connector
 
-from utils.module import ActivityVals, setup_db, commit_db
+from utils.module import ActivityVals, setup_db
      
 
 def create_fitness(actval):

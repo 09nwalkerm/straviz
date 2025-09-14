@@ -20,6 +20,9 @@ class ActivityVals:
     def addmydb(self,mydb):
         self.mydb = mydb
 
+    def add_sync_time(self,date):
+        self.sync_time = date
+
 def setup_db(actval):
     mydb = mysql.connect(
     host=actval.mysql_host,
