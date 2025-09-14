@@ -35,8 +35,16 @@ CREATE TABLE activities (
     stress INT              -- Training Stress Score (TSS)
 )
 ```
-- Create copy of activities table: same command as above replacing activities wth copy.
-- Create fitness table: `create table fitness (id INT, date DATE, fitness FLOAT, fatigue FLOAT, form FLOAT);`
+- Create daily fitness table with total stress for each day and subsequent fitness, fatigue and form values: 
+```
+CREATE TABLE fitness (
+    date DATE PRIMARY KEY,
+    stress FLOAT NOT NULL DEFAULT 0,
+    fitness FLOAT NOT NULL,
+    fatigue FLOAT NOT NULL,
+    form FLOAT NOT NULL
+);
+```
 
 
 ### Strava API
@@ -52,7 +60,7 @@ ACCESS_TOKEN=
 REFRESH_TOKEN=
 MYSQL_PW=
 MYSQL_USER="api_user"
-MQSQL_HOST="localhost"
+MYSQL_HOST="localhost"
 MYSQL_DATABASE="sport"
 LAST_SYNC=
 ```

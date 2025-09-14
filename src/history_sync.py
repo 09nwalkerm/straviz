@@ -5,7 +5,7 @@ import time
 from utils.module import setup_db, commit_db, filter_duplicates
 from sync import StravaActivityVals
 
-class BackActivityVals(StravaActivityVals):
+class HistoryVals(StravaActivityVals):
 
     def add_first(self,date):
         self.first_sync = date
@@ -36,7 +36,7 @@ def get_first_sync(actval) -> None:
 
 if __name__ == "__main__":
 
-    actval = BackActivityVals("activities")
+    actval = HistoryVals("activities")
     setup_db(actval)
     counter=0
     while True:
