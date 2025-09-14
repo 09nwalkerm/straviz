@@ -1,7 +1,7 @@
 import pymysql as mysql
 import json
 import requests
-from utils.module import ActivityVals, setup_db, commit_db
+from utils.module import ActivityVals, setup_db, commit_db, filter_duplicates
 from dotenv import load_dotenv, set_key
 import os
 

@@ -1,7 +1,7 @@
 import pymysql as mysql
 import json
 import requests
-from utils.module import ActivityVals, setup_db, commit_db
+from utils.module import setup_db, commit_db, filter_duplicates
 from sync import StravaActivityVals
 from adjust_copy import get_dates, sort_dates, fill_spaces
 
