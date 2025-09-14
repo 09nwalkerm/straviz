@@ -2,6 +2,7 @@ import pymysql as mysql
 import json
 import requests
 import datetime as dt
+import pandas as pd
 
 from utils.module import ActivityVals, setup_db, commit_db
 

@@ -22,6 +22,7 @@ if [ "$expires_at" -lt "$now" ]; then
         -F grant_type=refresh_token \
 	-F refresh_token=${refresh_token} > config/tokens.json
 	python3 process_tokens.py
+  rm config/tokens.json
 else
 	echo "Old token still valid"
 fi

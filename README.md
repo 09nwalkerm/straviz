@@ -1,29 +1,41 @@
 # Straviz
 
-Not a very functional, efficient or robust way of displaying strava data. Simply a project to learn Grafana, SQL, and improve my OOP in Python. The set up below should get you started but hopefully it will be automated in a script one day.
+Not a very functional, efficient or robust way of displaying Strava data. Simply a project to learn Grafana, SQL, and improve my OOP in Python. The set up below should get you started but hopefully it will be automated in a script one day.
 
 Disclaimer: This mini-app is in no way affiliated with Strava.
 
 ### Installation guide
 
-- Clone this repo.
-- Navigate to the source folder: `cd straviz/src`
+Clone this repo and navigate to the source folder.
+```
+git clone git@github.com:09nwalkerm/straviz.git
+cd straviz/src
+```
 
-### mysql
-- Install mysql with apt - `sudo apt install mysql server`
-- Open mysql with `sudo mysql`
-- Make sports database: `CREATE DATABASE sport;`
+### MySQL
 
-- Set up an `api_user` user: `CREATE USER 'api_user'@'localhost' IDENTIFIED BY 'your_secure_password';` obviously replacing `your_secure_password`
-- Save `your_secure_password` in a file `mysql_pw`
-- Then give permission to the api_user: `GRANT ALL PRIVILEGES ON sport.* TO 'api_user'@'localhost'; FLUSH PRIVILEGES; EXIT;`
+Using MySQL (or another server-based SQL framework) is essential for displaying data in Grafana as it does not yet take a memory-based database option like SQLite.
 
-- Select sport db: `USE sport;`
-- Create activities table: ``
+Install MySQL with apt and then open as root. 
+```
+sudo apt install mysql server
+sudo mysql
+```
+
+Make a database and set up an 'api_user' user with all privileges on that database. Save YOUR_PASSWORD and the name of the database, user and host in the `.env` credentials file (see Strava API section). 
+```
+CREATE DATABASE sport;
+USE sport;
+CREATE USER 'api_user'@'localhost' IDENTIFIED BY 'YOUR_PASSWORD';
+GRANT ALL PRIVILEGES ON sport.* TO 'api_user'@'localhost'; FLUSH PRIVILEGES; EXIT;
+
+```
+
+Now create the activities table to store the Strava activities in.
 ```sh
 CREATE TABLE activities (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    sid INT,                -- strava ID
+    sid BIGINT,             -- strava ID
     type VARCHAR(50),       -- type of activity
     date DATE,              -- date of activity
     moving_time INT,        -- in seconds
@@ -33,10 +45,19 @@ CREATE TABLE activities (
     avgHR INT,              -- average heart rate
     maxHR INT,              -- maximum heart rate
     stress INT              -- Training Stress Score (TSS)
-)
+);
 ```
-- Create copy of activities table: same command as above replacing activities wth copy.
-- Create fitness table: `create table fitness (id INT, date DATE, fitness FLOAT, fatigue FLOAT, form FLOAT);`
+
+Now create a daily fitness table with total stress for each day and subsequent fitness, fatigue and form values: 
+```
+CREATE TABLE fitness (
+    date DATE PRIMARY KEY,              -- date of each day since first activity on Strava
+    stress FLOAT NOT NULL DEFAULT 0,    -- total stress score for each day
+    fitness FLOAT NOT NULL,             -- fitness value each day
+    fatigue FLOAT NOT NULL,             -- fatigue value each day
+    form FLOAT NOT NULL                 -- form value each day
+);
+```
 
 
 ### Strava API
@@ -52,32 +73,24 @@ ACCESS_TOKEN=
 REFRESH_TOKEN=
 MYSQL_PW=
 MYSQL_USER="api_user"
-MQSQL_HOST="localhost"
+MYSQL_HOST="localhost"
 MYSQL_DATABASE="sport"
-LAST_SYNC=
-```
-- Save the LAST_SYNC key to 2 weeks ago (or further back if you want), using: `date -d "2 weeks ago" +%s`
-### setting up a python evironment
-- Make python environment:
-```py
-python3 -m venv straviz_env
-source straviz_env/bin/activate
-pip install -r requirements.txt
 ```
 
 ### GET some activities
-- Run `sync.sh`. 
-- Run `python3 back_date.py` a few times to get some data into the table (this assumes you have an active strava account with a few months of sporting activities to draw from).
-- Run `python3 adjust_copy.py`
-
+In the `src/` directory, run `sync.py history`. This may take a minute or two if you have thousands of activities (I had 2,201 dating back to 2013 at the time of writing). 
 
 ### Grafana
 - Install grafana with apt - follow steps on website...
 - Start grafana server if necessary or if coming back: `sudo systemctl start grafana-server`
 - Login to grafana admin and change admin password, save password
-- Setup mysql backend: `Menu -> Connections -> Data sources -> Add new data source`. Search MySQL and fill in details about api_user. Host url should be: `localhost:3306` with database: `sports`.
+- Setup mysql backend: `Menu -> Connections -> Data sources -> Add new data source`. Search MySQL and fill in details about api_user. Host url should be: `localhost:3306` with database: `sport`.
 - Load dashboard by `Menu -> Dashboards -> New -> Import` and when prompted upload the Activities.json file.
 - Et voila!
+
+Provided you have some data, your new dashboard should look something like this...
+
+![](dashboard/grafana.gif)
 
 ## Usage
 
