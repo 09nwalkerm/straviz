@@ -10,7 +10,6 @@ class ActivityVals:
         self.val = []
         self.table = table
         load_dotenv(dotenv_path="config/.env")
-        self.last_sync = int(os.getenv("LAST_SYNC"))
         self.mysql_user = os.getenv("MYSQL_USER")
         self.mysql_pw = os.getenv("MYSQL_PW")
         self.mysql_host = os.getenv("MYSQL_HOST")
