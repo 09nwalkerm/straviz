@@ -88,6 +88,10 @@ In the `src/` directory, run `sync.py history`. This may take a minute or two if
 - Load dashboard by `Menu -> Dashboards -> New -> Import` and when prompted upload the Activities.json file.
 - Et voila!
 
+Provided you have some data, your new dashboard should look something like this...
+
+![](dashboard/grafana.gif)
+
 ## Usage
 
 - Now you can come to this repo once a day/week/month, run `sync.sh` and fill in the gym sessions you did each day or add to the sports type folder to add even more activities (e.g. climbing sessions). Then watch your progress on grafana.
