@@ -1,10 +1,8 @@
-import pymysql as mysql
 import json
 import requests
 import time
-from utils.module import ActivityVals, setup_db, commit_db, filter_duplicates
+from utils.module import ActivityVals, setup_db, commit_db
 from dotenv import load_dotenv, set_key
-import os
 
 class StravaActivityVals(ActivityVals):
 
@@ -20,6 +18,15 @@ class StravaActivityVals(ActivityVals):
             filtered = {k: v for k, v in renamed.items() if k in allowed}
             self.val.append(filtered)
 
+
+def filter_duplicates(actval) -> None:
+    mycursor = actval.mydb.cursor()
+    sql = f"SELECT sid FROM {actval.table}"
+    mycursor.execute(sql)
+    saved_sids = mycursor.fetchall()
+    sids_set = {x[0] for x in saved_sids}
+    filtered_vals = [a for a in actval.val if a["sid"] not in sids_set]
+    actval.val = filtered_vals
 
 def fetch_sport(actval,direction):
     headers={"Authorization": "Bearer " + str(actval.access_token)}

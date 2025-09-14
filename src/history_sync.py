@@ -1,5 +1,5 @@
-from utils.module import setup_db, commit_db, filter_duplicates
-from sync import StravaActivityVals, fetch_sport, get_sync  
+from utils.module import setup_db, commit_db
+from sync import StravaActivityVals, fetch_sport, get_sync, filter_duplicates
 
 if __name__ == "__main__":
 

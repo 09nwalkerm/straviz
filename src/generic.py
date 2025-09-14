@@ -1,8 +1,5 @@
-import sys
 import datetime as dt
-import pymysql as mysql
 import json
-import requests
 from utils.module import ActivityVals, setup_db, commit_db
 
 class GenActivityVals(ActivityVals):
@@ -43,6 +40,4 @@ if __name__ == "__main__":
     actval = GenActivityVals("activities")
     setup_db(actval)
     createvals(actval)
-    commit_db(actval)
-    actval.table = "copy"
     commit_db(actval)

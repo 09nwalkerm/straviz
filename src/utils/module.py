@@ -32,15 +32,6 @@ def setup_db(actval):
     )
     actval.addmydb(mydb)
 
-def filter_duplicates(actval) -> None:
-    mycursor = actval.mydb.cursor()
-    sql = f"SELECT sid FROM {actval.table}"
-    mycursor.execute(sql)
-    saved_sids = mycursor.fetchall()
-    sids_set = {x[0] for x in saved_sids}
-    filtered_vals = [a for a in actval.val if a["sid"] not in sids_set]
-    actval.val = filtered_vals
-
 def commit_db(actval) -> None:
     mycursor = actval.mydb.cursor()
     columns = ", ".join(actval.val.keys())
