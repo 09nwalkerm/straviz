@@ -30,7 +30,306 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "tKWblJfVz"
+        "uid": "cey2lalsk5on4a"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "max": 600,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 19,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "cey2lalsk5on4a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "with data as (select date,distance,moving_time,stress from activities order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL -WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(stress) as total from data where date >= date_format(ADDDATE(current_date, INTERVAL -(63+WEEKDAY(current_date)) DAY),'%Y-%m-%d') group by weeks order by weeks;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Stress Score per week",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "cey2lalsk5on4a"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#8b0716",
+            "mode": "fixed",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "series",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 23,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "cey2lalsk5on4a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT date, fitness from fitness;\n\n#with data as (select date, sum(stress) as st from copy group by date order by date)\n#SELECT date,AVG(st) OVER (ORDER BY date RANGE BETWEEN INTERVAL 7 DAY PRECEDING AND CURRENT ROW) AS \"Fatigue\" FROM data;\n\n#with data as (select date,distance,moving_time from copy where type=\"Run\" order by date) \n#select DATE_FORMAT(ADDDATE(date, INTERVAL -WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \n#sum(distance) as total from data where date >= date_format(ADDDATE(current_date, INTERVAL -(63+WEEKDAY(current_date)) DAY),'%Y-%m-%d') group by weeks order by weeks;\n\n#with data as (select date, sum(stress) as st, ADDDATE(date, INTERVAL -1 DAY) as yesterday from copy group by date order by date)",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "cey2lalsk5on4a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT date, fatigue from fitness;\n\n#with data as (select date, sum(stress) as st from copy group by date order by date)\n#SELECT date,AVG(st) OVER (ORDER BY date RANGE BETWEEN INTERVAL 42 DAY PRECEDING AND CURRENT ROW) AS \"Fitness\" FROM data;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "cey2lalsk5on4a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "select date, form FROM fitness;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Fatigue and Fitness",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "cey2lalsk5on4a"
       },
       "fieldConfig": {
         "defaults": {
@@ -79,15 +378,16 @@
                 "value": 50000
               }
             ]
-          }
+          },
+          "unit": "lengthm"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 12,
+        "h": 11,
+        "w": 16,
         "x": 0,
-        "y": 0
+        "y": 10
       },
       "id": 7,
       "options": {
@@ -112,17 +412,17 @@
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "12.0.1+security-01",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
             "type": "mysql",
-            "uid": "tKWblJfVz"
+            "uid": "cey2lalsk5on4a"
           },
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "-- with data as (select date,distance,moving_time from copy where type=\"Run\") select convert(date_format(date,'%x %v'),char) as times, sum(distance) as total from data group by times; --\n\nwith data as (select date,distance,moving_time from copy where type=\"Run\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL 2-WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(distance) as total from data where date > date_format(ADDDATE(current_date, INTERVAL -60 DAY),\"%Y-%m-%d\") group by weeks order by weeks;",
+          "rawSql": "-- with data as (select date,distance,moving_time from copy where type=\"Run\") select convert(date_format(date,'%x %v'),char) as times, sum(distance) as total from data group by times; --\n\nwith data as (select date,distance,moving_time from activities where type=\"Run\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL -WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(distance) as total from data where date >= date_format(ADDDATE(current_date, INTERVAL -(63+WEEKDAY(current_date)) DAY),'%Y-%m-%d') group by weeks order by weeks;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -149,99 +449,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "tKWblJfVz"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 36000,
-          "min": 0,
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "semi-dark-red"
-              },
-              {
-                "color": "#EAB839",
-                "value": 40
-              },
-              {
-                "color": "semi-dark-orange",
-                "value": 60
-              },
-              {
-                "color": "semi-dark-green",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 6,
-        "x": 12,
-        "y": 0
-      },
-      "id": 11,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "12.0.1+security-01",
-      "targets": [
-        {
-          "datasource": {
-            "type": "mysql",
-            "uid": "tKWblJfVz"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "#with data as (select date,distance,moving_time from activities) select convert(date_format(date,'%x %v'),char) as times, sum(moving_time) as Total from data group by times;\n\nwith data as (select date,distance,moving_time from copy order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL 2-WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(moving_time) as \"Moving Time\" from data where date > date_format(ADDDATE(current_date, INTERVAL -60 DAY),\"%Y-%m-%d\") group by weeks order by weeks;\n\n# TODO: get mondays to display nothing",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Total Moving Time for Week",
-      "transparent": true,
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "tKWblJfVz"
+        "uid": "cey2lalsk5on4a"
       },
       "description": "",
       "fieldConfig": {
@@ -263,15 +471,16 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "dthms"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
-        "w": 6,
-        "x": 18,
-        "y": 0
+        "h": 21,
+        "w": 8,
+        "x": 16,
+        "y": 10
       },
       "id": 12,
       "options": {
@@ -289,17 +498,17 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.0.1+security-01",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
             "type": "mysql",
-            "uid": "tKWblJfVz"
+            "uid": "cey2lalsk5on4a"
           },
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "#with data as (select date,distance,moving_time from activities) select convert(date_format(date,'%x %v'),char) as times, sum(moving_time) as Total from data group by times;\n\nwith data as (select date,distance,moving_time from copy order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL 2-WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(moving_time) as \"Moving Time\" from data where date > date_format(ADDDATE(current_date, INTERVAL -40 DAY),\"%Y-%m-%d\") group by weeks order by weeks;",
+          "rawSql": "#with data as (select date,distance,moving_time from activities) select convert(date_format(date,'%x %v'),char) as times, sum(moving_time) as Total from data group by times;\n\nwith data as (select date,distance,moving_time from activities order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL -WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(moving_time) as \"Moving Time\" from data where date >= date_format(ADDDATE(current_date, INTERVAL -(35+WEEKDAY(current_date)) DAY),\"%Y-%m-%d\") group by weeks order by weeks;\n\n#number of days back has to be multiple of 7 days (because of number of days in the week)",
           "refId": "A",
           "sql": {
             "columns": [
@@ -327,233 +536,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "tKWblJfVz"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "light-blue",
-            "mode": "fixed"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "hue",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 2,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 12,
-        "x": 0,
-        "y": 6
-      },
-      "id": 14,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "orientation": "auto",
-        "showValue": "auto",
-        "stacking": "none",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
-      },
-      "pluginVersion": "12.0.1+security-01",
-      "targets": [
-        {
-          "datasource": {
-            "type": "mysql",
-            "uid": "tKWblJfVz"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "#with data as (select date,distance,moving_time from copy where type=\"Gym\") select convert(date_format(date,'%x %v'),char) as times, sum(moving_time) as total from data group by times;\n\nwith data as (select date,distance,moving_time from copy where type=\"Gym\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL 2-WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(moving_time) as total from data where date > date_format(ADDDATE(current_date, INTERVAL -60 DAY),\"%Y-%m-%d\") group by weeks order by weeks;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Weekly Gym Time Totals",
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "tKWblJfVz"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 10
-      },
-      "id": 3,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.1+security-01",
-      "targets": [
-        {
-          "dataset": "sport",
-          "datasource": {
-            "type": "mysql",
-            "uid": "tKWblJfVz"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT date,SUM(distance) OVER (ORDER BY date RANGE BETWEEN INTERVAL 42 DAY PRECEDING AND CURRENT ROW) AS \"Running\" FROM copy WHERE type=\"Run\";",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "activities"
-        }
-      ],
-      "title": "Distance Rolling 6 Week Total",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "tKWblJfVz"
+        "uid": "cey2lalsk5on4a"
       },
       "fieldConfig": {
         "defaults": {
@@ -627,10 +610,10 @@
         ]
       },
       "gridPos": {
-        "h": 6,
-        "w": 12,
+        "h": 10,
+        "w": 16,
         "x": 0,
-        "y": 12
+        "y": 21
       },
       "id": 13,
       "options": {
@@ -656,18 +639,18 @@
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "12.0.1+security-01",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
             "type": "mysql",
-            "uid": "tKWblJfVz"
+            "uid": "cey2lalsk5on4a"
           },
           "editorMode": "code",
           "format": "table",
           "hide": true,
           "rawQuery": true,
-          "rawSql": "-- with data as (select date,distance,moving_time from copy where type=\"Run\") select convert(date_format(date,'%x %v'),char) as times, sum(moving_time) as total from data group by times;\n\nwith data as (select date,distance,moving_time,avgHR from activities where type=\"Run\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL 2-WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \navg(avgHR) as total from data where date > date_format(ADDDATE(current_date, INTERVAL -60 DAY),\"%Y-%m-%d\") group by weeks order by weeks;",
+          "rawSql": "-- with data as (select date,distance,moving_time from copy where type=\"Run\") select convert(date_format(date,'%x %v'),char) as times, sum(moving_time) as total from data group by times;\n\nwith data as (select date,distance,moving_time,avgHR from activities where type=\"Run\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL -WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \navg(avgHR) as total from data where date >= date_format(ADDDATE(current_date, INTERVAL -(63+WEEKDAY(current_date)) DAY),\"%Y-%m-%d\") group by weeks order by weeks;\n\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -690,13 +673,13 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "tKWblJfVz"
+            "uid": "cey2lalsk5on4a"
           },
           "editorMode": "code",
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "with data as (select date,distance,moving_time,avgHR,maxHR from activities where type=\"Run\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL 2-WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nmax(maxHR) as total from data where date > date_format(ADDDATE(current_date, INTERVAL -60 DAY),\"%Y-%m-%d\") group by weeks order by weeks;",
+          "rawSql": "with data as (select date,distance,moving_time,avgHR,maxHR from activities where type=\"Run\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL -WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nmax(maxHR) as total from data where date > date_format(ADDDATE(current_date, INTERVAL -(63+WEEKDAY(current_date)) DAY),\"%Y-%m-%d\") group by weeks order by weeks;",
           "refId": "B",
           "sql": {
             "columns": [
@@ -723,127 +706,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "tKWblJfVz"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "red"
-              },
-              {
-                "color": "yellow",
-                "value": 40
-              },
-              {
-                "color": "orange",
-                "value": 60
-              },
-              {
-                "color": "green",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 0,
-        "y": 18
-      },
-      "id": 9,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "12.0.1+security-01",
-      "targets": [
-        {
-          "datasource": {
-            "type": "mysql",
-            "uid": "tKWblJfVz"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "#select yearweek(date,1) as time, sum(moving_time) as \"Run\" from copy where type=\"Run\" group by time;\n\nwith data as (select date,distance,moving_time from copy where type=\"Run\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL 2-WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(moving_time) as \"Run\" from data where date > date_format(ADDDATE(current_date, INTERVAL -60 DAY),\"%Y-%m-%d\") group by weeks order by weeks;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        },
-        {
-          "datasource": {
-            "type": "mysql",
-            "uid": "tKWblJfVz"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "hide": false,
-          "rawQuery": true,
-          "rawSql": "#select yearweek(date,1) as time, sum(moving_time) as \"Gym\" from copy where type=\"Gym\" group by time;\n\nwith data as (select date,distance,moving_time from copy where type=\"Gym\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL 2-WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(moving_time) as \"Gym\" from data where date > date_format(ADDDATE(current_date, INTERVAL -60 DAY),\"%Y-%m-%d\") group by weeks order by weeks;",
-          "refId": "B",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "This week",
-      "transparent": true,
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "tKWblJfVz"
+        "uid": "cey2lalsk5on4a"
       },
       "fieldConfig": {
         "defaults": {
@@ -895,15 +758,16 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "s"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 11,
         "w": 12,
-        "x": 12,
-        "y": 19
+        "x": 0,
+        "y": 31
       },
       "id": 5,
       "options": {
@@ -919,17 +783,17 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.1+security-01",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
             "type": "mysql",
-            "uid": "tKWblJfVz"
+            "uid": "cey2lalsk5on4a"
           },
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT date,SUM(moving_time) OVER (ORDER BY date RANGE BETWEEN INTERVAL 7 DAY PRECEDING AND CURRENT ROW) AS \"All Activities\" FROM copy;",
+          "rawSql": "SELECT date,SUM(moving_time) OVER (ORDER BY date RANGE BETWEEN INTERVAL 7 DAY PRECEDING AND CURRENT ROW) AS \"All Activities\" FROM activities;",
           "refId": "All",
           "sql": {
             "columns": [
@@ -952,13 +816,13 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "tKWblJfVz"
+            "uid": "cey2lalsk5on4a"
           },
           "editorMode": "code",
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT date,SUM(moving_time) OVER (ORDER BY date RANGE BETWEEN INTERVAL 7 DAY PRECEDING AND CURRENT ROW) AS \"Run\" FROM copy WHERE type=\"Run\";",
+          "rawSql": "SELECT date,SUM(moving_time) OVER (ORDER BY date RANGE BETWEEN INTERVAL 7 DAY PRECEDING AND CURRENT ROW) AS \"Run\" FROM activities WHERE type=\"Run\";",
           "refId": "Run",
           "sql": {
             "columns": [
@@ -981,13 +845,13 @@
         {
           "datasource": {
             "type": "mysql",
-            "uid": "tKWblJfVz"
+            "uid": "cey2lalsk5on4a"
           },
           "editorMode": "code",
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT date,SUM(moving_time) OVER (ORDER BY date RANGE BETWEEN INTERVAL 7 DAY PRECEDING AND CURRENT ROW) AS \"Gym\" FROM copy WHERE type=\"Gym\";",
+          "rawSql": "SELECT date,SUM(moving_time) OVER (ORDER BY date RANGE BETWEEN INTERVAL 7 DAY PRECEDING AND CURRENT ROW) AS \"Gym\" FROM activities WHERE type=\"Gym\";",
           "refId": "Gym",
           "sql": {
             "columns": [
@@ -1014,7 +878,154 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "tKWblJfVz"
+        "uid": "cey2lalsk5on4a"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "lengthm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 12,
+        "y": 31
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "dataset": "sport",
+          "datasource": {
+            "type": "mysql",
+            "uid": "cey2lalsk5on4a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "SELECT date,SUM(distance) OVER (ORDER BY date RANGE BETWEEN INTERVAL 42 DAY PRECEDING AND CURRENT ROW) AS \"Running\" FROM activities WHERE type=\"Run\";",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "activities"
+        },
+        {
+          "dataset": "mysql",
+          "datasource": {
+            "type": "mysql",
+            "uid": "cey2lalsk5on4a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH daily_runs AS (\n  SELECT DATE(date) AS day, SUM(distance) AS daily_distance\n  FROM activities\n  WHERE type = 'Run'\n  GROUP BY DATE(date)\n)\nSELECT \n    f.date,\n    COALESCE(\n      SUM(d.daily_distance) OVER (\n        ORDER BY f.date\n        RANGE BETWEEN INTERVAL 42 DAY PRECEDING AND CURRENT ROW\n      ),\n      0\n    ) AS Running\nFROM fitness f\nLEFT JOIN daily_runs d ON d.day = f.date\nWHERE f.date >= DATE_ADD(CURDATE(), INTERVAL -352 DAY)\nORDER BY f.date;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Running Distance Rolling 6 Week Total",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "cey2lalsk5on4a"
       },
       "fieldConfig": {
         "defaults": {
@@ -1023,6 +1034,7 @@
             "mode": "fixed"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -1054,15 +1066,16 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "lengthm"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 13,
+        "h": 10,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 42
       },
       "id": 16,
       "options": {
@@ -1080,6 +1093,7 @@
         "showValue": "auto",
         "stacking": "none",
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         },
@@ -1087,17 +1101,20 @@
         "xTickLabelRotation": -45,
         "xTickLabelSpacing": 0
       },
+      "pluginVersion": "12.0.2",
       "targets": [
         {
+          "dataset": "mysql",
           "datasource": {
             "type": "mysql",
-            "uid": "tKWblJfVz"
+            "uid": "cey2lalsk5on4a"
           },
           "editorMode": "code",
           "format": "table",
+          "hide": false,
           "rawQuery": true,
-          "rawSql": "with data as (select date,distance,moving_time from copy where type=\"Run\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL -WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(distance) as total from data where date > date_format(ADDDATE(current_date, INTERVAL -300 DAY),\"%Y-%m-%d\") group by weeks order by weeks;",
-          "refId": "A",
+          "rawSql": "SELECT \n    DATE_FORMAT(DATE_SUB(f.date, INTERVAL WEEKDAY(f.date) DAY), '%Y-%m-%d') AS week_start,\n    COALESCE(SUM(a.distance), 0) AS total_distance\nFROM fitness f\nLEFT JOIN activities a\n  ON DATE(a.date) = f.date\n  AND a.type = 'Run'\n  AND a.date >= DATE_ADD(CURDATE(), INTERVAL -352 DAY)\nWHERE f.date >= DATE_ADD(CURDATE(), INTERVAL -352 DAY)\nGROUP BY week_start\nORDER BY week_start;",
+          "refId": "C",
           "sql": {
             "columns": [
               {
@@ -1123,89 +1140,72 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "tKWblJfVz"
+        "uid": "cey2lalsk5on4a"
       },
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "semi-dark-green",
-            "mode": "fixed"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "mode": "thresholds"
           },
           "mappings": [],
+          "max": 36000,
+          "min": 0,
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
-                "color": "green"
+                "color": "semi-dark-red"
               },
               {
-                "color": "red",
+                "color": "semi-dark-orange",
+                "value": 40
+              },
+              {
+                "color": "#EAB839",
+                "value": 60
+              },
+              {
+                "color": "semi-dark-green",
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "dthms"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 13,
-        "w": 24,
+        "h": 10,
+        "w": 8,
         "x": 0,
-        "y": 41
+        "y": 52
       },
-      "id": 17,
+      "id": 11,
       "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
-        "showValue": "auto",
-        "stacking": "none",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": false
         },
-        "xField": "weeks",
-        "xTickLabelRotation": -75,
-        "xTickLabelSpacing": 0
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
             "type": "mysql",
-            "uid": "tKWblJfVz"
+            "uid": "cey2lalsk5on4a"
           },
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "with data as (select date,distance,moving_time from copy where type=\"Run\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL -WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(distance) as total from data group by weeks order by weeks;\n\n#where date > date_format(ADDDATE(current_date, INTERVAL -300 DAY),\"%Y-%m-%d\") ",
+          "rawSql": "#with data as (select date,distance,moving_time from activities) select convert(date_format(date,'%x %v'),char) as times, sum(moving_time) as Total from data group by times;\n\nwith data as (select date,distance,moving_time from activities order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL 2-WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(moving_time) as \"Moving Time\" from data where date > date_format(ADDDATE(current_date, INTERVAL -60 DAY),\"%Y-%m-%d\") group by weeks order by weeks;\n\n# TODO: get mondays to display nothing",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1226,7 +1226,381 @@
           }
         }
       ],
-      "title": "Previous Year Running Distance Weekly Total",
+      "title": "Total Moving Time for Week",
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "cey2lalsk5on4a"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#8b0716",
+            "mode": "fixed",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "series",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 23,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#ffffff",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1.5
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 41
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "none"
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#ff0000",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 16,
+        "x": 8,
+        "y": 52
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "cey2lalsk5on4a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT date, fitness from fitness;\n\n#with data as (select date, sum(stress) as st from copy group by date order by date)\n#SELECT date,AVG(st) OVER (ORDER BY date RANGE BETWEEN INTERVAL 7 DAY PRECEDING AND CURRENT ROW) AS \"Fatigue\" FROM data;\n\n#with data as (select date,distance,moving_time from copy where type=\"Run\" order by date) \n#select DATE_FORMAT(ADDDATE(date, INTERVAL -WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \n#sum(distance) as total from data where date >= date_format(ADDDATE(current_date, INTERVAL -(63+WEEKDAY(current_date)) DAY),'%Y-%m-%d') group by weeks order by weeks;\n\n#with data as (select date, sum(stress) as st, ADDDATE(date, INTERVAL -1 DAY) as yesterday from copy group by date order by date)",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "cey2lalsk5on4a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT date, fatigue from fitness;\n\n#with data as (select date, sum(stress) as st from copy group by date order by date)\n#SELECT date,AVG(st) OVER (ORDER BY date RANGE BETWEEN INTERVAL 42 DAY PRECEDING AND CURRENT ROW) AS \"Fitness\" FROM data;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "cey2lalsk5on4a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "select date, form FROM fitness;",
+          "refId": "C",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Fatigue and Fitness",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "cey2lalsk5on4a"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-green",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 60000,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "lengthm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 63
+      },
+      "id": 17,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "week_start",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "cey2lalsk5on4a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": true,
+          "rawQuery": true,
+          "rawSql": "with data as (select date,distance,moving_time from activities where type=\"Run\" order by date) \nselect DATE_FORMAT(ADDDATE(date, INTERVAL -WEEKDAY(date) DAY), '%Y-%m-%d') as weeks, \nsum(distance) as total from data group by weeks order by weeks;\n\n#where date > date_format(ADDDATE(current_date, INTERVAL -300 DAY),\"%Y-%m-%d\") ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "dataset": "mysql",
+          "datasource": {
+            "type": "mysql",
+            "uid": "cey2lalsk5on4a"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT \n    DATE_FORMAT(DATE_SUB(f.date, INTERVAL WEEKDAY(f.date) DAY), '%Y-%m-%d') AS week_start,\n    COALESCE(SUM(a.distance), 0) AS total_distance\nFROM fitness f\nLEFT JOIN activities a\n  ON DATE(a.date) = f.date\n  AND a.type = 'Run'\n#  AND a.date >= DATE_ADD(CURDATE(), INTERVAL -352 DAY)\n#WHERE f.date >= DATE_ADD(CURDATE(), INTERVAL -352 DAY)\nGROUP BY week_start\nORDER BY week_start;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "All Time Running Distance Weekly Total",
       "type": "barchart"
     }
   ],
@@ -1238,12 +1612,12 @@
     "list": []
   },
   "time": {
-    "from": "now-1w/w",
-    "to": "now-1w/w"
+    "from": "now-1y",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Activities",
   "uid": "jcTSZYB4z",
-  "version": 20
+  "version": 33
 }
