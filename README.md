@@ -1,6 +1,6 @@
 # Straviz
 
-Not a very functional, efficient or robust way of displaying strava data. Simply a project to learn Grafana, SQL, and improve my OOP in Python. The set up below should get you started but hopefully it will be automated in a script one day.
+Not a very functional, efficient or robust way of displaying Strava data. Simply a project to learn Grafana, SQL, and improve my OOP in Python. The set up below should get you started but hopefully it will be automated in a script one day.
 
 Disclaimer: This mini-app is in no way affiliated with Strava.
 
@@ -9,17 +9,20 @@ Disclaimer: This mini-app is in no way affiliated with Strava.
 - Clone this repo.
 - Navigate to the source folder: `cd straviz/src`
 
-### mysql
+### MySQL
+
+Using MySQL (or another server-based SQL framework) is essential for displaying data in Grafana as it does not yet take a memory-based database option like SQLite.
+
 - Install mysql with apt - `sudo apt install mysql server`
-- Open mysql with `sudo mysql`
-- Make sports database: `CREATE DATABASE sport;`
-
-- Set up an `api_user` user: `CREATE USER 'api_user'@'localhost' IDENTIFIED BY 'your_secure_password';` obviously replacing `your_secure_password`
-- Save `your_secure_password` in a file `mysql_pw`
-- Then give permission to the api_user: `GRANT ALL PRIVILEGES ON sport.* TO 'api_user'@'localhost'; FLUSH PRIVILEGES; EXIT;`
-
-- Select sport db: `USE sport;`
-- Create activities table: ``
+    - Then open MySQL with `sudo mysql`
+- Make a database and set up an 'api_user' user with all privileges on that database. Save YOUR_PASSWORD and the name of the database, user and host in the `.env` credentials file. 
+```
+CREATE DATABASE sport;
+USE sport;
+CREATE USER 'api_user'@'localhost' IDENTIFIED BY 'YOUR_PASSWORD';
+GRANT ALL PRIVILEGES ON sport.* TO 'api_user'@'localhost'; FLUSH PRIVILEGES; EXIT;
+```
+- Now create the activities table to store the Strava activities in.
 ```sh
 CREATE TABLE activities (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -35,14 +38,14 @@ CREATE TABLE activities (
     stress INT              -- Training Stress Score (TSS)
 )
 ```
-- Create daily fitness table with total stress for each day and subsequent fitness, fatigue and form values: 
+- Now create a daily fitness table with total stress for each day and subsequent fitness, fatigue and form values: 
 ```
 CREATE TABLE fitness (
-    date DATE PRIMARY KEY,
-    stress FLOAT NOT NULL DEFAULT 0,
-    fitness FLOAT NOT NULL,
-    fatigue FLOAT NOT NULL,
-    form FLOAT NOT NULL
+    date DATE PRIMARY KEY,              -- date of each day since first activity on Strava
+    stress FLOAT NOT NULL DEFAULT 0,    -- total stress score for each day
+    fitness FLOAT NOT NULL,             -- fitness value each day
+    fatigue FLOAT NOT NULL,             -- fatigue value each day
+    form FLOAT NOT NULL                 -- form value each day
 );
 ```
 
@@ -65,7 +68,7 @@ MYSQL_DATABASE="sport"
 LAST_SYNC=
 ```
 - Save the LAST_SYNC key to 2 weeks ago (or further back if you want), using: `date -d "2 weeks ago" +%s`
-### setting up a python evironment
+### Setting up a python evironment
 - Make python environment:
 ```py
 python3 -m venv straviz_env
