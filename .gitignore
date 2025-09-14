@@ -1,5 +1,5 @@
 #tokens and pws to ignore
-src/tokens.json
+src/config/tokens.json
 .env
 src/.env
 src/config/.env
