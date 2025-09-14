@@ -33,17 +33,26 @@ def setup_db(actval):
 
 def commit_db(actval) -> None:
     mycursor = actval.mydb.cursor()
-    columns = ", ".join(actval.val.keys())
-    placeholders = ", ".join(["%s"] * len(actval.val.values))
-    sql = f"INSERT INTO {actval.table} ({columns}) VALUES ({placeholders})"
+    columns = ", ".join(actval.val[0].keys())
+    placeholders = ", ".join(["%s"] * len(actval.val[0]))
+    #sql = f"INSERT INTO {actval.table} ({columns}) VALUES ({placeholders})"
     #sql= "INSERT INTO " + actval.table + " (sid, type, date, moving_time, distance, avg_speed, avgHR, maxHR, stress) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    allowed = ["sid", "type", "date", "moving_time", "distance",
+           "avg_speed", "elevation", "avgHR", "maxHR", "stress"]
 
-    if (actval.length == 0):
+    sql = f"INSERT INTO {actval.table} ({', '.join(allowed)}) VALUES ({', '.join(['%s'] * len(allowed))})"
+
+    data = []
+    for row in actval.val:  # list of JSONs
+        normalized = {k: row.get(k, None) for k in allowed}
+        data.append(tuple(normalized.values()))
+
+    if (len(data) == 0):
         print("You're already up to date :)")
-    elif (actval.length == 1):
+    elif (len(data) == 1):
         print("Adding 1 activity to database")
-        mycursor.execute(sql, tuple(actval.val.values()))
+        mycursor.execute(sql, data)
     else:
-        mycursor.executemany(sql, actval.val)
-        print(f"Adding {actval.length :d} activities to database")
+        mycursor.executemany(sql, data)
+        print(f"Adding {actval.length :d} activities to database.")
     actval.mydb.commit()

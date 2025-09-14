@@ -20,23 +20,27 @@ def create_fitness(actval):
     daily_df = daily.reset_index()
     daily_df.columns = ["date", "stress"]
 
-    fatigue = np.zeros(int(len(myresult)))
-    fitness = np.zeros(int(len(myresult)))
-    form = np.zeros(int(len(myresult)))
+    fatigue = np.zeros(int(len(daily_df)))
+    fitness = np.zeros(int(len(daily_df)))
+    form = np.zeros(int(len(daily_df)))
 
-    for i in range(1,int(len(myresult))):
+    for i in range(1,int(len(daily_df))):
         fatigue[i] = fatigue[i-1] + (daily_df["stress"][i] - fatigue[i-1])*(1/7)
         fitness[i] = fitness[i-1] + (daily_df["stress"][i] - fitness[i-1])*(1/42)
         form[i] = fitness[i-1] - fatigue[i-1]
 
-    engine = create_engine(f"mysql+mysqlconnector://{actval.mysql_user}:{actval.mysql_pw}@{actval.mysql_db}/{actval.table}")
+    daily_df["fitness"] = fitness
+    daily_df["fatigue"] = fatigue
+    daily_df["form"] = form
+
+    engine = create_engine(f"mysql+mysqlconnector://{actval.mysql_user}:{actval.mysql_pw}@{actval.mysql_host}/{actval.mysql_db}")
 
     mycursor = actval.mydb.cursor()
     sql = "DELETE FROM fitness"
     mycursor.execute(sql)
     actval.mydb.commit()
-    daily_df.to_sql("daily_stress", engine, if_exists="append", index=False)
-    print(f"Daily fitness table updated")
+    daily_df.to_sql("fitness", engine, if_exists="append", index=False)
+    print(f"Daily fitness table updated.")
 
 
 if __name__ == "__main__":

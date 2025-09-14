@@ -35,7 +35,7 @@ Now create the activities table to store the Strava activities in.
 ```sh
 CREATE TABLE activities (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    sid INT,                -- strava ID
+    sid BIGINT,             -- strava ID
     type VARCHAR(50),       -- type of activity
     date DATE,              -- date of activity
     moving_time INT,        -- in seconds
@@ -78,7 +78,7 @@ MYSQL_DATABASE="sport"
 ```
 
 ### GET some activities
-In the `src/` directory, run `sync.py history`. 
+In the `src/` directory, run `sync.py history`. This may take a minute or two if you have thousands of activities (I had 2,201 dating back to 2013 at the time of writing). 
 
 ### Grafana
 - Install grafana with apt - follow steps on website...

@@ -1,3 +1,4 @@
+import time
 from utils.module import setup_db, commit_db
 from sync import StravaActivityVals, fetch_sport, get_sync, filter_duplicates
 
@@ -14,6 +15,6 @@ if __name__ == "__main__":
         else:
             filter_duplicates(actval)
             commit_db(actval)
-        if counter==50: #100 API read rate limit per 15 mins
+        if counter==90: #100 API read rate limit per 15 mins
             time.sleep(900)
             counter=0
