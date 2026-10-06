@@ -19,7 +19,7 @@ class StravaActivityVals(ActivityVals):
             self.val.append(filtered)
 
 
-def filter_duplicates(actval) -> None:
+def filter_duplicates(actval):
     mycursor = actval.mydb.cursor()
     sql = f"SELECT sid FROM {actval.table}"
     mycursor.execute(sql)
@@ -27,6 +27,12 @@ def filter_duplicates(actval) -> None:
     sids_set = {x[0] for x in saved_sids}
     filtered_vals = [a for a in actval.val if a["sid"] not in sids_set]
     actval.val = filtered_vals
+    if len(filtered_vals) == 0:
+        print(f"Already in database, skipping...")
+        print(f"No more activities to sync.")
+        return True
+    else:
+        return False
 
 def fetch_sport(actval,direction):
     headers={"Authorization": "Bearer " + str(actval.access_token)}
@@ -37,7 +43,8 @@ def fetch_sport(actval,direction):
         return True
     else:
         actval.addactivities(acts.json())
-        print(f"Syncing {actval.length :d} strava activities...")
+        #print(actval.val)
+        print(f"Fetched {actval.length :d} strava activities...")
         return False
 
 def get_sync(actval,direction) -> None:
@@ -51,18 +58,25 @@ def get_sync(actval,direction) -> None:
         sync = myresult[0][0].strftime("%s")
     actval.add_sync_time(sync)
 
-if __name__ == "__main__":
-
-    actval = StravaActivityVals("activities")
-    setup_db(actval)
+def sync_activities(actval):
+    counter=0
     while True:
         counter+=1
         get_sync(actval,"DESC")
         if fetch_sport(actval,"after"):
             break
         else:
-            filter_duplicates(actval)
+            if filter_duplicates(actval):
+                break
             commit_db(actval)
         if counter==50: #100 API read rate limit per 15 mins
             time.sleep(900)
             counter=0
+
+if __name__ == "__main__":
+
+    actval = StravaActivityVals("activities")
+    setup_db(actval)
+    sync_activities(actval)
+
+

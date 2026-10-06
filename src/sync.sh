@@ -16,8 +16,7 @@ if [ "$1" == "history" ]; then
     python3 history_sync.py
     echo "Full Strava history has been saved."
 else
-    python3 sync.py
-    python3 generic.py
+    python3 run_sync.py
     echo "Activities table updated."
 fi
 # Adjust copy table to fill gaps

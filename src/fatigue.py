@@ -1,15 +1,17 @@
 import numpy as np
 import pandas as pd
-from sqlalchemy import create_engine
-import mysql.connector
+from sqlalchemy import create_engine, text
+#import mysql.connector
 
 from utils.module import ActivityVals, setup_db
      
 
 def create_fitness(actval):
 
+    engine = create_engine(f"mysql+mysqlconnector://{actval.mysql_user}:{actval.mysql_pw}@{actval.mysql_host}/{actval.mysql_db}")
+    
     #sql = "SELECT date, sum(stress) as st FROM copy GROUP BY date ORDER BY date;"
-    df = pd.read_sql("SELECT date, stress FROM activities", actval.mydb)
+    df = pd.read_sql("SELECT date, stress FROM activities", engine)
 
     daily = df.groupby("date")["stress"].sum()
 
@@ -33,12 +35,8 @@ def create_fitness(actval):
     daily_df["fatigue"] = fatigue
     daily_df["form"] = form
 
-    engine = create_engine(f"mysql+mysqlconnector://{actval.mysql_user}:{actval.mysql_pw}@{actval.mysql_host}/{actval.mysql_db}")
-
-    mycursor = actval.mydb.cursor()
-    sql = "DELETE FROM fitness"
-    mycursor.execute(sql)
-    actval.mydb.commit()
+    with engine.begin() as connection:
+        connection.execute(text("DELETE FROM fitness"))
     daily_df.to_sql("fitness", engine, if_exists="append", index=False)
     print(f"Daily fitness table updated.")
 

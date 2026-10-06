@@ -14,7 +14,7 @@ def get_json(answer):
     return sport_type
 
 def createvals(actval):
-    epoch_time = actval.last_sync
+    epoch_time = int(actval.sync_time)
     today = dt.datetime.now().strftime("%Y-%m-%d")
     today_midnight = int(dt.datetime.strptime(today,'%Y-%m-%d').strftime('%s'))
     vals = []
